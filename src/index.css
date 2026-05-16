@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 35 30% 96%;
+    --foreground: 20 25% 12%;
+
+    --card: 35 25% 93%;
+    --card-foreground: 20 25% 12%;
+
+    --popover: 35 30% 96%;
+    --popover-foreground: 20 25% 12%;
+
+    --primary: 15 55% 38%;
+    --primary-foreground: 40 30% 95%;
+
+    --secondary: 235 35% 22%;
+    --secondary-foreground: 40 30% 95%;
+
+    --muted: 35 20% 88%;
+    --muted-foreground: 20 12% 45%;
+
+    --accent: 38 72% 50%;
+    --accent-foreground: 20 25% 12%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 18% 82%;
+    --input: 30 18% 82%;
+    --ring: 15 55% 38%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 35 25% 93%;
+    --sidebar-foreground: 20 25% 12%;
+    --sidebar-primary: 15 55% 38%;
+    --sidebar-primary-foreground: 40 30% 95%;
+    --sidebar-accent: 35 20% 88%;
+    --sidebar-accent-foreground: 20 25% 12%;
+    --sidebar-border: 30 18% 82%;
+    --sidebar-ring: 15 55% 38%;
+
+    /* Custom tokens */
+    --terracotta: 15 55% 38%;
+    --terracotta-light: 15 50% 55%;
+    --indigo: 235 35% 22%;
+    --indigo-light: 235 30% 35%;
+    --gold: 38 72% 50%;
+    --gold-light: 38 60% 65%;
+    --copper: 25 65% 45%;
+    --sand: 35 30% 96%;
+    --ivory: 40 30% 95%;
+    --warm-dark: 20 25% 12%;
+  }
+
+  .dark {
+    --background: 20 25% 8%;
+    --foreground: 35 30% 92%;
+    --card: 20 22% 12%;
+    --card-foreground: 35 30% 92%;
+    --popover: 20 22% 12%;
+    --popover-foreground: 35 30% 92%;
+    --primary: 15 50% 55%;
+    --primary-foreground: 20 25% 8%;
+    --secondary: 235 30% 35%;
+    --secondary-foreground: 35 30% 92%;
+    --muted: 20 18% 18%;
+    --muted-foreground: 30 15% 60%;
+    --accent: 38 60% 55%;
+    --accent-foreground: 20 25% 8%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 20 15% 22%;
+    --input: 20 15% 22%;
+    --ring: 15 50% 55%;
+    --sidebar-background: 20 22% 10%;
+    --sidebar-foreground: 35 30% 92%;
+    --sidebar-primary: 15 50% 55%;
+    --sidebar-primary-foreground: 20 25% 8%;
+    --sidebar-accent: 20 18% 15%;
+    --sidebar-accent-foreground: 35 30% 92%;
+    --sidebar-border: 20 15% 22%;
+    --sidebar-ring: 15 50% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer utilities {
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--copper)));
+  }
+
+  .bg-gradient-hero {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--indigo)) 0%,
+      hsl(var(--indigo-light)) 50%,
+      hsl(var(--terracotta)) 100%
+    );
+  }
+
+  .bg-gradient-section {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--sand)) 0%,
+      hsl(var(--ivory)) 100%
+    );
+  }
+
+  .bg-pattern-overlay {
+    position: relative;
+  }
+
+  .bg-pattern-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.05;
+    background-image: url('/src/assets/african-pattern.jpg');
+    background-size: 200px;
+    background-repeat: repeat;
+    pointer-events: none;
+  }
+}
