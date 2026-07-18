@@ -12,6 +12,7 @@ interface SetResult {
 
 interface UserProgress {
   username: string;
+  email: string;
   profileId: string | null;
   totalPoints: number;
   completedSets: Record<string, SetResult>;
@@ -26,6 +27,7 @@ const STORAGE_KEY = "africa-learning-hub-progress";
 
 const defaultProgress: UserProgress = {
   username: "",
+  email: "",
   profileId: null,
   totalPoints: 0,
   completedSets: {},
@@ -103,11 +105,12 @@ export function useTriviaProgress() {
     }
   }, [progress]);
 
-  const setUsername = useCallback(async (name: string) => {
-    const profile = await getOrCreateProfile(name);
+  const setUsername = useCallback(async (name: string, email?: string) => {
+    const profile = await getOrCreateProfile(name, email);
     setProgress((p) => ({
       ...p,
       username: name,
+      email: email || p.email,
       profileId: profile?.id || null,
     }));
   }, []);

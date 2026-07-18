@@ -26,6 +26,7 @@ const Learn = () => {
   const { progress, setUsername } = useTriviaProgress();
   const [showNameInput, setShowNameInput] = useState(!progress.username);
   const [nameValue, setNameValue] = useState("");
+  const [emailValue, setEmailValue] = useState("");
 
   const handleCountrySelect = (countryId: string) => {
     if (countryId === "nigeria") {
@@ -35,7 +36,7 @@ const Learn = () => {
 
   const handleSetName = () => {
     if (nameValue.trim()) {
-      setUsername(nameValue.trim());
+      setUsername(nameValue.trim(), emailValue.trim() || undefined);
       setShowNameInput(false);
     }
   };
@@ -58,16 +59,24 @@ const Learn = () => {
           {/* Username prompt */}
           {showNameInput && (
             <div className="max-w-md mx-auto mb-10 bg-card p-6 rounded-xl shadow-sm border border-border animate-scale-in">
-              <h2 className="font-heading text-lg font-bold mb-3 text-foreground">Choose Your Scholar Name</h2>
-              <div className="flex gap-2">
+              <h2 className="font-heading text-lg font-bold mb-1 text-foreground">Choose Your Scholar Name</h2>
+              <p className="text-sm text-muted-foreground mb-4">Your name will appear on the leaderboard.</p>
+              <div className="space-y-3">
                 <Input
                   value={nameValue}
                   onChange={(e) => setNameValue(e.target.value)}
-                  placeholder="Enter your name..."
+                  placeholder="Your scholar name..."
                   onKeyDown={(e) => e.key === "Enter" && handleSetName()}
                 />
-                <Button onClick={handleSetName} disabled={!nameValue.trim()}>
-                  Start
+                <Input
+                  type="email"
+                  value={emailValue}
+                  onChange={(e) => setEmailValue(e.target.value)}
+                  placeholder="Email address (optional)"
+                  onKeyDown={(e) => e.key === "Enter" && handleSetName()}
+                />
+                <Button onClick={handleSetName} disabled={!nameValue.trim()} className="w-full">
+                  Start Learning
                 </Button>
               </div>
             </div>

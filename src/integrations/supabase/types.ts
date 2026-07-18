@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_modules: {
+        Row: {
+          id: string
+          title: string
+          subtitle: string | null
+          description: string | null
+          content: string
+          country: string
+          era: string
+          module_number: number | null
+          image_url: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          subtitle?: string | null
+          description?: string | null
+          content: string
+          country?: string
+          era?: string
+          module_number?: number | null
+          image_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          subtitle?: string | null
+          description?: string | null
+          content?: string
+          country?: string
+          era?: string
+          module_number?: number | null
+          image_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       completed_sets: {
         Row: {
           completed_at: string
@@ -139,6 +181,7 @@ export type Database = {
           best_streak: number
           created_at: string
           current_streak: number
+          email: string | null
           id: string
           total_points: number
           updated_at: string
@@ -149,6 +192,7 @@ export type Database = {
           best_streak?: number
           created_at?: string
           current_streak?: number
+          email?: string | null
           id?: string
           total_points?: number
           updated_at?: string
@@ -159,6 +203,7 @@ export type Database = {
           best_streak?: number
           created_at?: string
           current_streak?: number
+          email?: string | null
           id?: string
           total_points?: number
           updated_at?: string

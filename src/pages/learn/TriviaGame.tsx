@@ -31,6 +31,12 @@ const TriviaGame = () => {
 
   const previousBadges = useMemo(() => [...progress.earnedBadges], []);
 
+  // Shuffle questions randomly each game session
+  const questions = useMemo(() => {
+    if (!triviaSet) return [];
+    return [...triviaSet.questions].sort(() => Math.random() - 0.5);
+  }, [setId]);
+
   const handleAnswer = useCallback(
     (isCorrect: boolean, timeRemaining: number) => {
       if (isCorrect) {
@@ -123,7 +129,6 @@ const TriviaGame = () => {
     );
   }
 
-  const questions = triviaSet.questions;
   const progressPercent = gameOver
     ? 100
     : (currentQ / questions.length) * 100;

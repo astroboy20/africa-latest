@@ -3,25 +3,44 @@ import { supabase } from "@/integrations/supabase/client";
 interface ProfileData {
   id: string;
   username: string;
+  email: string | null;
   total_points: number;
   current_streak: number;
   best_streak: number;
 }
 
-export async function getOrCreateProfile(username: string): Promise<ProfileData | null> {
-  // Try to find existing profile
+export async function getOrCreateProfile(
+  username: string,
+  email?: string
+): Promise<ProfileData | null> {
+  // Try to find existing profile by username
   const { data: existing } = await supabase
     .from("profiles")
     .select("*")
     .eq("username", username)
     .maybeSingle();
 
-  if (existing) return existing as ProfileData;
+  if (existing) {
+    // Update email if provided and not set
+    if (email && !existing.email) {
+      await supabase
+        .from("profiles")
+        .update({ email })
+        .eq("id", existing.id);
+    }
+    return existing as ProfileData;
+  }
 
   // Create new profile
   const { data: created, error } = await supabase
     .from("profiles")
-    .insert({ username, total_points: 0, current_streak: 0, best_streak: 0 })
+    .insert({
+      username,
+      email: email || null,
+      total_points: 0,
+      current_streak: 0,
+      best_streak: 0,
+    })
     .select()
     .single();
 
@@ -38,7 +57,10 @@ export async function syncProgressToCloud(
   totalPoints: number,
   currentStreak: number,
   bestStreak: number,
-  completedSets: Record<string, { score: number; total: number; perfect: boolean; points: number }>,
+  completedSets: Record<
+    string,
+    { score: number; total: number; perfect: boolean; points: number }
+  >,
   earnedBadges: string[],
   modulesRead: string[]
 ) {
@@ -46,24 +68,26 @@ export async function syncProgressToCloud(
     // Update profile points
     await supabase
       .from("profiles")
-      .update({ total_points: totalPoints, current_streak: currentStreak, best_streak: bestStreak })
+      .update({
+        total_points: totalPoints,
+        current_streak: currentStreak,
+        best_streak: bestStreak,
+      })
       .eq("id", profileId);
 
     // Upsert completed sets
     for (const [setId, result] of Object.entries(completedSets)) {
-      await supabase
-        .from("completed_sets")
-        .upsert(
-          {
-            profile_id: profileId,
-            set_id: setId,
-            score: result.score,
-            total: result.total,
-            perfect: result.perfect,
-            points: result.points,
-          },
-          { onConflict: "profile_id,set_id" }
-        );
+      await supabase.from("completed_sets").upsert(
+        {
+          profile_id: profileId,
+          set_id: setId,
+          score: result.score,
+          total: result.total,
+          perfect: result.perfect,
+          points: result.points,
+        },
+        { onConflict: "profile_id,set_id" }
+      );
     }
 
     // Insert earned badges (ignore duplicates)

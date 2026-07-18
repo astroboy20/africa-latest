@@ -167,7 +167,15 @@ const LeaderboardTable = ({ userScore, username, moduleFilter }: LeaderboardTabl
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="py-8 text-center text-muted-foreground">Loading leaderboard...</div>
+          <div className="space-y-2">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="flex items-center gap-3 px-3 py-2.5 rounded-lg animate-pulse">
+                <div className="w-8 h-5 bg-muted rounded" />
+                <div className="flex-1 h-4 bg-muted rounded w-3/4" />
+                <div className="h-4 bg-muted rounded w-16" />
+              </div>
+            ))}
+          </div>
         ) : moduleFilter ? (
           <Tabs value={tab} onValueChange={setTab}>
             <TabsList className="mb-4">

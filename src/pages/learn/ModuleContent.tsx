@@ -107,11 +107,12 @@ const ModuleContent = () => {
 
           {/* CTA to play trivia */}
           <div className="mt-10 bg-card border border-border rounded-xl p-6 text-center">
+            <div className="text-4xl mb-3">🧠</div>
             <h3 className="font-heading text-xl font-bold text-foreground mb-2">
-              Ready to test your knowledge?
+              Test Your Knowledge
             </h3>
-            <p className="text-muted-foreground mb-4">
-              Play the trivia sets for this module and earn points!
+            <p className="text-muted-foreground mb-5">
+              You've read the material — now prove it! Take the trivia sets for this module and earn points.
             </p>
 
             <div className="flex flex-wrap justify-center gap-3 mb-4">
@@ -134,6 +135,11 @@ const ModuleContent = () => {
                       <Play className="w-4 h-4" />
                     )}
                     {set.label}
+                    {completed && (
+                      <span className="text-xs text-muted-foreground ml-1">
+                        ({progress.completedSets[set.id]?.score}/{progress.completedSets[set.id]?.total})
+                      </span>
+                    )}
                   </Button>
                 );
               })}

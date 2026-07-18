@@ -18,6 +18,8 @@ import TriviaGame from "./pages/learn/TriviaGame";
 import BadgeGallery from "./pages/learn/BadgeGallery";
 import LeaderboardPage from "./pages/learn/LeaderboardPage";
 import ModuleContent from "./pages/learn/ModuleContent";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +44,9 @@ const App = () => (
           <Route path="/learn/nigeria/module/:moduleNumber/content" element={<ModuleContent />} />
           <Route path="/learn/badges" element={<BadgeGallery />} />
           <Route path="/learn/leaderboard" element={<LeaderboardPage />} />
+          {/* Admin — hidden, not linked from anywhere */}
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
