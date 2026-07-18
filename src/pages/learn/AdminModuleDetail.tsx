@@ -58,14 +58,51 @@ const AdminModuleDetail = () => {
     setGeneratingQuiz(true);
     setQuizError("");
 
-    const ok = await generateAndSaveQuestions(mod.id, mod.title, mod.content);
-    if (ok) {
-      await fetchModule();
-    } else {
-      setQuizError(
-        "Quiz generation failed. Check the browser console for the exact error."
-      );
+    try {
+      // Call edge function directly to surface the real error
+      const res = await supabase.functions.invoke("generate-questions", {
+        body: { title: mod.title, content: mod.content },
+      });
+
+      console.log("[quiz] full response:", res);
+
+      if (res.error) {
+        const context = (res.error as any)?.context;
+        let detail = res.error.message;
+        if (context) {
+          try {
+            const body = await context.json();
+            detail = body?.error || JSON.stringify(body);
+          } catch {
+            try { detail = await context.text(); } catch {}
+          }
+        }
+        setQuizError(`Function error: ${detail}`);
+        setGeneratingQuiz(false);
+        return;
+      }
+
+      const questions = res.data?.questions;
+      if (!Array.isArray(questions) || questions.length === 0) {
+        setQuizError(`No questions returned. Response: ${JSON.stringify(res.data)}`);
+        setGeneratingQuiz(false);
+        return;
+      }
+
+      const { error: saveError } = await supabase
+        .from("admin_modules")
+        .update({ questions })
+        .eq("id", mod.id);
+
+      if (saveError) {
+        setQuizError(`Save error: ${saveError.message}`);
+      } else {
+        await fetchModule();
+      }
+    } catch (e: any) {
+      setQuizError(`Exception: ${e?.message || String(e)}`);
     }
+
     setGeneratingQuiz(false);
   };
 
@@ -104,14 +141,15 @@ const AdminModuleDetail = () => {
   const allQuestions: any[] = mod.questions || [];
   const setAQuestions = allQuestions.slice(0, 10);
   const setBQuestions = allQuestions.slice(10, 20);
+  const setCQuestions = allQuestions.slice(20, 30);
   const setAId = `ADMIN-${mod.id}-A`;
   const setBId = `ADMIN-${mod.id}-B`;
+  const setCId = `ADMIN-${mod.id}-C`;
 
   const sets = [
-    { id: setAId, label: "Set A — Quiz", questions: setAQuestions },
-    ...(setBQuestions.length > 0
-      ? [{ id: setBId, label: "Set B — Quiz", questions: setBQuestions }]
-      : []),
+    { id: setAId, label: "Set A", questions: setAQuestions },
+    ...(setBQuestions.length > 0 ? [{ id: setBId, label: "Set B", questions: setBQuestions }] : []),
+    ...(setCQuestions.length > 0 ? [{ id: setCId, label: "Set C", questions: setCQuestions }] : []),
   ];
 
   const hasQuestions = allQuestions.length > 0;

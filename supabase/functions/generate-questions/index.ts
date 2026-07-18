@@ -10,31 +10,43 @@ Deno.serve(async (req) => {
 
   try {
     const { title, content } = await req.json();
-    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
 
-    if (!GEMINI_API_KEY) {
+    if (!GROQ_API_KEY) {
       return new Response(
-        JSON.stringify({ error: "GEMINI_API_KEY secret not set" }),
+        JSON.stringify({ error: "GROQ_API_KEY secret not set" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const prompt = `You are an expert African history educator. Based on the following module content, generate exactly 10 multiple choice trivia questions.
+    // Strip HTML tags and clean up whitespace to reduce token count
+    const plainText = content
+      .replace(/<[^>]*>/g, " ")           // remove all HTML tags
+      .replace(/&nbsp;/g, " ")            // decode common entities
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/\s+/g, " ")               // collapse whitespace
+      .trim()
+      .slice(0, 3000);                     // hard cap at 3000 chars (~750 tokens)
+
+    const prompt = `You are an expert African history educator. Based on the following module content, generate exactly 30 multiple choice trivia questions.
 
 Module title: "${title}"
 
 Content:
-${content}
+${plainText}
 
 Requirements:
 - Each question must be directly answerable from the content above
-- Each question has exactly 4 options (A, B, C, D)
+- Each question has exactly 4 options
 - Only one option is correct
 - Questions should test understanding, not just memorisation
-- Vary difficulty: some easy, some medium, some hard
+- Vary difficulty across all 30: first 10 easy, next 10 medium, last 10 hard
 - No trick questions
+- No repeated questions
 
-Return ONLY a valid JSON array with this exact structure, no extra text:
+Return ONLY a valid JSON array of exactly 30 objects, no explanation, no markdown, no code fences:
 [
   {
     "id": "q1",
@@ -46,39 +58,42 @@ Return ONLY a valid JSON array with this exact structure, no extra text:
 
 correctIndex is 0-based (0 = first option is correct).`;
 
-    // Call Gemini directly — no third-party gateway needed
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 2048,
-          },
-        }),
-      }
-    );
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7,
+        max_tokens: 4096,
+      }),
+    });
 
     if (!response.ok) {
       const text = await response.text();
       return new Response(
-        JSON.stringify({ error: `Gemini API error: ${text}` }),
+        JSON.stringify({ error: `Groq API error: ${text}` }),
         { status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     const data = await response.json();
-    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
+    const raw = data.choices?.[0]?.message?.content || "[]";
 
     // Strip markdown code fences if present
     const cleaned = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
 
+    // Extract JSON array — find first [ to last ]
+    const start = cleaned.indexOf("[");
+    const end = cleaned.lastIndexOf("]");
+    const jsonStr = start !== -1 && end !== -1 ? cleaned.slice(start, end + 1) : cleaned;
+
     let questions;
     try {
-      questions = JSON.parse(cleaned);
+      questions = JSON.parse(jsonStr);
     } catch {
       return new Response(
         JSON.stringify({ error: "Failed to parse questions JSON", raw }),

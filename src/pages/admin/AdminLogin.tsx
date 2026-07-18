@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock } from "lucide-react";
+import logoImg from "@/assets/logo.jpg";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -36,9 +36,7 @@ const AdminLogin = () => {
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
-            <Lock className="w-7 h-7 text-primary" />
-          </div>
+          <img src={logoImg} alt="Africa Retold" className="h-16 w-auto object-contain mx-auto mb-4" />
           <h1 className="font-heading text-2xl font-bold text-foreground">Admin Access</h1>
           <p className="text-sm text-muted-foreground mt-1">Africa Retold Dashboard</p>
         </div>

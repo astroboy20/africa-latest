@@ -21,7 +21,17 @@ export async function generateQuestionsForModule(
     console.log("[generate-questions] Response:", JSON.stringify(res));
 
     if (res.error) {
-      console.error("[generate-questions] Invocation error:", res.error);
+      // FunctionsHttpError has a context with the response body
+      const errMsg = res.error instanceof Error ? res.error.message : String(res.error);
+      try {
+        // Try to get the actual response body from the error context
+        const context = (res.error as any).context;
+        if (context) {
+          const body = await context.json().catch(() => context.text());
+          console.error("[generate-questions] HTTP error body:", body);
+        }
+      } catch {}
+      console.error("[generate-questions] Invocation error:", errMsg);
       return null;
     }
 
@@ -61,7 +71,14 @@ export async function generateAndSaveQuestions(
   title: string,
   content: string
 ): Promise<boolean> {
-  const questions = await generateQuestionsForModule(title, content);
+  // Strip HTML before sending — edge function does this too but be safe
+  const plainText = content
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 3000);
+
+  const questions = await generateQuestionsForModule(title, plainText);
   if (!questions || questions.length === 0) return false;
 
   const { error } = await supabase

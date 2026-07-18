@@ -140,11 +140,15 @@ const AdminModuleContent = () => {
   const allQuestions: any[] = mod.questions || [];
   const setAId = `ADMIN-${mod.id}-A`;
   const setBId = `ADMIN-${mod.id}-B`;
+  const setCId = `ADMIN-${mod.id}-C`;
 
   const sets = [
-    { id: setAId, label: "Set A — Quiz", questions: allQuestions.slice(0, 10) },
+    { id: setAId, label: "Set A", questions: allQuestions.slice(0, 10) },
     ...(allQuestions.slice(10, 20).length > 0
-      ? [{ id: setBId, label: "Set B — Quiz", questions: allQuestions.slice(10, 20) }]
+      ? [{ id: setBId, label: "Set B", questions: allQuestions.slice(10, 20) }]
+      : []),
+    ...(allQuestions.slice(20, 30).length > 0
+      ? [{ id: setCId, label: "Set C", questions: allQuestions.slice(20, 30) }]
       : []),
   ];
 

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTriviaProgress } from "@/hooks/use-trivia-progress";
 import { Trophy, BookOpen, Flame, MapPin } from "lucide-react";
-
 const countries = [
   { id: "nigeria", name: "Nigeria", active: true, description: "Southwest Nigeria — Pre-Colonial Era" },
   { id: "ghana", name: "Ghana", active: false, description: "Ashanti Kingdom & Gold Coast" },
@@ -82,9 +81,12 @@ const Learn = () => {
             </div>
           )}
 
-          {/* Stats bar */}
+          {/* Stats bar — shown when user is logged in */}
           {progress.username && (
-            <div className="flex flex-wrap justify-center gap-6 mb-10 animate-fade-in">
+            <div className="flex flex-wrap justify-center items-center gap-4 mb-10 animate-fade-in">
+              <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-full border border-border">
+                <span className="text-sm font-semibold text-foreground">👤 {progress.username}</span>
+              </div>
               <div className="flex items-center gap-2 bg-card px-4 py-2 rounded-full border border-border">
                 <Trophy className="w-4 h-4 text-accent" />
                 <span className="text-sm font-medium">{progress.totalPoints} points</span>

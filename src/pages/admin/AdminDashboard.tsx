@@ -17,6 +17,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import AdminModuleUpload from "@/components/admin/AdminModuleUpload";
+import logoImg from "@/assets/logo.jpg";
 
 interface PlayerRow {
   id: string;
@@ -314,13 +315,8 @@ const AdminDashboard = () => {
     <AdminGuard>
       <div className="min-h-screen bg-background">
         {/* Header */}
-        <header className="sticky top-0 z-50 bg-card border-b border-border px-4 md:px-6 py-3 flex items-center justify-between">
-          <div>
-            <h1 className="font-heading font-bold text-base md:text-lg text-foreground leading-tight">
-              Africa Retold
-              <span className="text-muted-foreground font-normal"> — Admin</span>
-            </h1>
-          </div>
+        <header className="sticky top-0 z-50 bg-card border-b border-border px-4 md:px-6 py-2 flex items-center justify-between">
+          <img src={logoImg} alt="Africa Retold" className="h-9 w-auto object-contain" />
           <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-1.5">
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">Sign Out</span>
