@@ -20,6 +20,11 @@ import LeaderboardPage from "./pages/learn/LeaderboardPage";
 import ModuleContent from "./pages/learn/ModuleContent";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminModuleView from "./pages/learn/AdminModuleView";
+import AdminModuleDetail from "./pages/learn/AdminModuleDetail";
+import AdminModuleContent from "./pages/learn/AdminModuleContent";
+import AdminTriviaGame from "./pages/learn/AdminTriviaGame";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +34,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/approach" element={<Approach />} />
@@ -42,6 +48,9 @@ const App = () => (
           <Route path="/learn/nigeria/module/:moduleNumber" element={<ModuleDetail />} />
           <Route path="/learn/nigeria/module/:moduleNumber/set/:setId" element={<TriviaGame />} />
           <Route path="/learn/nigeria/module/:moduleNumber/content" element={<ModuleContent />} />
+          <Route path="/learn/nigeria/admin-module/:moduleId" element={<AdminModuleDetail />} />
+          <Route path="/learn/nigeria/admin-module/:moduleId/content" element={<AdminModuleContent />} />
+          <Route path="/learn/nigeria/admin-module/:moduleId/set/:setId" element={<AdminTriviaGame />} />
           <Route path="/learn/badges" element={<BadgeGallery />} />
           <Route path="/learn/leaderboard" element={<LeaderboardPage />} />
           {/* Admin — hidden, not linked from anywhere */}

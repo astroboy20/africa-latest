@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import ModuleCard from "@/components/learn/ModuleCard";
 import { Button } from "@/components/ui/button";
 import { modules, countries } from "@/data/trivia-data";
 import { useTriviaProgress } from "@/hooks/use-trivia-progress";
+import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft, Lock, ChevronRight } from "lucide-react";
 import module1Img from "@/assets/learn/module1-header.jpg";
 import module2Img from "@/assets/learn/module2-header.jpg";
@@ -20,20 +21,39 @@ const moduleImages: Record<number, string> = {
   5: module5Img,
 };
 
+interface AdminModule {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  image_url: string | null;
+  module_number: number | null;
+}
+
 const CountryDashboard = () => {
   const navigate = useNavigate();
   const { progress, getModuleProgress } = useTriviaProgress();
   const [selectedZone, setSelectedZone] = useState<string | null>("south-west");
   const [selectedEra, setSelectedEra] = useState<string>("pre-colonial");
+  const [adminModules, setAdminModules] = useState<AdminModule[]>([]);
 
   const country = countries.find((c) => c.id === "nigeria")!;
   const eras = country.eras;
+
+  useEffect(() => {
+    supabase
+      .from("admin_modules")
+      .select("id, title, subtitle, description, image_url, module_number")
+      .eq("country", "nigeria")
+      .eq("era", "pre-colonial")
+      .order("module_number", { ascending: true })
+      .then(({ data }) => setAdminModules(data || []));
+  }, []);
 
   return (
     <Layout>
       <section className="min-h-[calc(100vh-4rem)] bg-gradient-section">
         <div className="container max-w-6xl mx-auto px-4 py-8">
-          {/* Back button */}
           <Button variant="ghost" onClick={() => navigate("/learn")} className="mb-6 gap-2">
             <ArrowLeft className="w-4 h-4" /> Back to Map
           </Button>
@@ -96,6 +116,7 @@ const CountryDashboard = () => {
           {/* Module Grid */}
           {selectedZone === "south-west" && selectedEra === "pre-colonial" ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Hardcoded modules */}
               {modules.map((mod) => {
                 const modProgress = getModuleProgress(mod.id);
                 return (
@@ -106,6 +127,29 @@ const CountryDashboard = () => {
                     totalSets={modProgress.total}
                     onClick={() => navigate(`/learn/nigeria/module/${mod.number}`)}
                     imageUrl={moduleImages[mod.number]}
+                  />
+                );
+              })}
+
+              {/* Admin-uploaded modules */}
+              {adminModules.map((am) => {
+                const fakeModule = {
+                  id: `admin-${am.id}`,
+                  number: am.module_number ?? 0,
+                  title: am.title,
+                  subtitle: am.subtitle || "",
+                  description: am.description || "",
+                  imageTheme: "",
+                  sets: [],
+                };
+                return (
+                  <ModuleCard
+                    key={am.id}
+                    module={fakeModule}
+                    completedSets={0}
+                    totalSets={1}
+                    onClick={() => navigate(`/learn/nigeria/admin-module/${am.id}`)}
+                    imageUrl={am.image_url || undefined}
                   />
                 );
               })}

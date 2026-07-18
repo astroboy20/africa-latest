@@ -107,12 +107,14 @@ export function useTriviaProgress() {
 
   const setUsername = useCallback(async (name: string, email?: string) => {
     const profile = await getOrCreateProfile(name, email);
-    setProgress((p) => ({
-      ...p,
+    // Always start from clean default progress for a new user session
+    // This ensures user B never inherits user A's local state
+    setProgress({
+      ...defaultProgress,
       username: name,
-      email: email || p.email,
+      email: email || "",
       profileId: profile?.id || null,
-    }));
+    });
   }, []);
 
   const calculateSetScore = useCallback(

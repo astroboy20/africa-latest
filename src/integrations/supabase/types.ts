@@ -25,6 +25,7 @@ export type Database = {
           era: string
           module_number: number | null
           image_url: string | null
+          questions: any | null
           created_at: string
           updated_at: string
         }
@@ -38,6 +39,7 @@ export type Database = {
           era?: string
           module_number?: number | null
           image_url?: string | null
+          questions?: any | null
           created_at?: string
           updated_at?: string
         }
@@ -51,6 +53,7 @@ export type Database = {
           era?: string
           module_number?: number | null
           image_url?: string | null
+          questions?: any | null
           created_at?: string
           updated_at?: string
         }
