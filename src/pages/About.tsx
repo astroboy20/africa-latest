@@ -1,10 +1,37 @@
 import Layout from "@/components/Layout";
-import { Target, Eye, Users } from "lucide-react";
+import { Target, Eye } from "lucide-react";
+import drFemi from "@/assets/dr-femi.png";
+import drMichael from "@/assets/dr-micheal.png";
+import clinton from "@/assets/clinton.png";
+import simi from "@/assets/simi.png";
+import fade from "@/assets/fade.png";
 
 const team = [
-  { name: "Founder & Lead Educator", desc: "A passionate historian and educator committed to transforming how African history is taught worldwide." },
-  { name: "Curriculum Director", desc: "An academic with decades of experience in Pan-African studies and decolonized pedagogy." },
-  { name: "Community Lead", desc: "Connecting families across the diaspora with the resources and support they need." },
+  {
+    name: "Dr. Oluwafemi Daniel Adebisi",
+    title: "Chief Executive Officer",
+    image: drFemi,
+  },
+  {
+    name: "Michael Ogundele, Ph.D.",
+    title: "Chief Operating Officer",
+    image: drMichael,
+  },
+  {
+    name: "Clinton Joseph",
+    title: "Chief Financial Officer",
+    image: clinton,
+  },
+  {
+    name: "Similoluwa Peters",
+    title: "Vice President, Technology",
+    image: simi,
+  },
+  {
+    name: "Oluwateniola Faderera Adeniyi",
+    title: "Enterprise Project Manager",
+    image: fade,
+  },
 ];
 
 const About = () => {
@@ -41,18 +68,45 @@ const About = () => {
           </div>
 
           {/* Team */}
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-heading font-bold text-foreground mb-8 text-center">
-              The Team
+          <div id="team" className="max-w-5xl mx-auto">
+            <h2 className="text-2xl font-heading font-bold text-foreground mb-10 text-center">
+              Meet the Team
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {team.map((member) => (
-                <div key={member.name} className="bg-card border border-border rounded-xl p-6 text-center">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <Users className="text-primary" size={32} />
-                  </div>
-                  <h3 className="font-heading font-semibold text-foreground mb-2">{member.name}</h3>
-                  <p className="text-sm text-muted-foreground">{member.desc}</p>
+
+            {/* Top row — 3 members */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+              {team.slice(0, 3).map((member) => (
+                <div key={member.name} className="bg-card border border-border rounded-2xl p-6 text-center flex flex-col items-center">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-24 h-24 rounded-full object-cover object-top mb-4 border-2 border-primary/20"
+                  />
+                  <h3 className="font-heading font-bold text-foreground text-base leading-snug mb-1">
+                    {member.name}
+                  </h3>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+                    {member.title}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom row — 2 members centered */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              {team.slice(3).map((member) => (
+                <div key={member.name} className="bg-card border border-border rounded-2xl p-6 text-center flex flex-col items-center">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="w-24 h-24 rounded-full object-cover object-top mb-4 border-2 border-primary/20"
+                  />
+                  <h3 className="font-heading font-bold text-foreground text-base leading-snug mb-1">
+                    {member.name}
+                  </h3>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+                    {member.title}
+                  </p>
                 </div>
               ))}
             </div>

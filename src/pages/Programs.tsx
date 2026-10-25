@@ -65,7 +65,7 @@ const Programs = () => {
                     </div>
                   ))}
                 </div>
-                <Link to="/get-involved">
+                <Link to="/get-involved#contact-form">
                   <Button variant="default">Enroll in This Track</Button>
                 </Link>
               </div>

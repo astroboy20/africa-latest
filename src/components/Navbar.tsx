@@ -17,9 +17,7 @@ import { useTriviaProgress } from "@/hooks/use-trivia-progress";
 import logoImg from "@/assets/logo.jpg";
 
 const navLinks = [
-  { label: "Home", path: "/" },
   { label: "Our Approach", path: "/approach" },
-  { label: "Programs", path: "/programs" },
   { label: "Learn", path: "/learn" },
   { label: "Media", path: "/media" },
   { label: "Get Involved", path: "/get-involved" },
@@ -49,23 +47,38 @@ const Navbar = () => {
 
         {/* Desktop Nav */}
         <div className="hidden lg:flex items-center gap-1">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                location.pathname === link.path
-                  ? "text-primary bg-primary/5"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const linkPath = link.path.split("#")[0];
+            const isActive = !link.path.includes("#") && location.pathname === linkPath;
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive
+                    ? "text-primary bg-primary/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+
+          {/* Donate button — always visible */}
+          <a
+            href="https://www.zeffy.com/en-US/donation-form/support-africa-retold-usa"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="outline" size="sm" className="ml-2 border-primary text-primary hover:bg-primary/10">
+              Donate
+            </Button>
+          </a>
 
           {/* Show user info + sign out when logged in on learn pages */}
           {progress.username ? (
-            <div className="flex items-center gap-2 ml-3">
+            <div className="flex items-center gap-2 ml-2">
               <div className="flex items-center gap-1.5 bg-muted px-3 py-1.5 rounded-full text-sm text-foreground">
                 <User className="w-3.5 h-3.5 text-muted-foreground" />
                 <span className="font-medium max-w-[120px] truncate">{progress.username}</span>
@@ -97,8 +110,8 @@ const Navbar = () => {
               </AlertDialog>
             </div>
           ) : (
-            <Link to="/get-involved">
-              <Button variant="gold" size="sm" className="ml-3">
+            <Link to="/programs">
+              <Button variant="gold" size="sm" className="ml-2">
                 Enroll Now
               </Button>
             </Link>
@@ -119,20 +132,24 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="lg:hidden bg-background border-b border-border animate-fade-in">
           <div className="container mx-auto px-4 py-4 flex flex-col gap-2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => setMobileOpen(false)}
-                className={`px-4 py-3 rounded-md text-sm font-medium transition-colors ${
-                  location.pathname === link.path
-                    ? "text-primary bg-primary/5"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const linkPath = link.path.split("#")[0];
+              const isActive = !link.path.includes("#") && location.pathname === linkPath;
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setMobileOpen(false)}
+                  className={`px-4 py-3 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? "text-primary bg-primary/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
 
             {progress.username ? (
               <div className="mt-2 space-y-2">
@@ -171,11 +188,23 @@ const Navbar = () => {
                 </AlertDialog>
               </div>
             ) : (
-              <Link to="/get-involved" onClick={() => setMobileOpen(false)}>
-                <Button variant="gold" className="w-full mt-2">
-                  Enroll Now
-                </Button>
-              </Link>
+              <div className="mt-2 space-y-2">
+                <Link to="/programs" onClick={() => setMobileOpen(false)}>
+                  <Button variant="gold" className="w-full">
+                    Enroll Now
+                  </Button>
+                </Link>
+                <a
+                  href="https://www.zeffy.com/en-US/donation-form/support-africa-retold-usa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10">
+                    Donate
+                  </Button>
+                </a>
+              </div>
             )}
           </div>
         </div>

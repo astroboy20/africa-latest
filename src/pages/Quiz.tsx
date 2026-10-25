@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Share2, Twitter, Facebook, Link2, Check } from "lucide-react";
+import { Link } from "react-router-dom";
 import africanPattern from "@/assets/african-pattern.jpg";
 import { toast } from "@/hooks/use-toast";
 
@@ -55,7 +56,7 @@ const questions = [
 
 type Category = "A" | "B" | "C" | "D";
 
-const results: Record<Category, { headline: string; text: string; cta: string; ctaLink: string }> = {
+const results: Record<Category, { headline: string; text: string; cta: string; ctaLink: string; external?: boolean }> = {
   A: {
     headline: "You're an Explorer. Your journey is just beginning.",
     text: "Your foundation is in traditional narratives, but your curiosity is the first step. You have a deep hunger to understand the world beyond the standard story. You need Africa Retold to provide the context and truth that was missing from your education.",
@@ -210,11 +211,11 @@ const Quiz = () => {
                 <p className="text-muted-foreground leading-relaxed mb-8">
                   {results[result].text}
                 </p>
-                <a href={results[result].ctaLink}>
+                <Link to={results[result].ctaLink}>
                   <Button variant="hero" size="lg" className="bg-primary text-primary-foreground">
                     {results[result].cta}
                   </Button>
-                </a>
+                </Link>
               </div>
 
               {/* Share buttons */}

@@ -1,5 +1,6 @@
 import { Mic, Video, MonitorPlay, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const channels = [
   { icon: Mic, title: "Podcast", desc: "Deep-dive conversations on African history and identity." },
@@ -38,9 +39,11 @@ const ContentEcosystem = () => {
         </div>
 
         <div className="text-center">
-          <Button variant="gold" size="lg">
-            Follow & Subscribe
-          </Button>
+          <Link to="/media">
+            <Button variant="gold" size="lg">
+              Follow &amp; Subscribe
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
