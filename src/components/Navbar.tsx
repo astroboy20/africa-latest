@@ -200,7 +200,7 @@ const Navbar = () => {
                   rel="noopener noreferrer"
                   onClick={() => setMobileOpen(false)}
                 >
-                  <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10">
+                  <Button variant="outline" className="w-full border-primary text-primary hover:bg-primary/10 mt-3">
                     Donate
                   </Button>
                 </a>
